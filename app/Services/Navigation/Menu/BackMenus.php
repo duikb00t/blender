@@ -52,11 +52,11 @@ class BackMenus
         Menu::macro('backUser', function () {
 
             $avatar = Html::avatar(current_user(), '-small').
-                el('span.:response-desktop-only', current_user()->email);
+                '<span class=":response-desktop-only">'.current_user()->email.'</span>';
 
             return Menu::new()
-                ->add(Link::action('Back\BackUserController@edit', $avatar, [current_user()->id]))
-                ->html(view('back.auth._partials.logoutForm'));
+                ->action('Back\BackUserController@edit', $avatar, [current_user()->id])
+                ->view('back.auth._partials.logoutForm');
         });
     }
 }

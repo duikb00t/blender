@@ -10,27 +10,26 @@ class FrontMenus
 {
     public function register()
     {
-        Menu::macro('front', function () {
-            return Menu::new()->setActiveFromRequest(locale());
-        });
-
         Menu::macro('main', function () {
-            return Menu::front()
+            return Menu::new()
                 ->addClass('nav__list')
-                ->url('/', 'Home');
+                ->url('/', 'Home')
+                ->setActiveFromRequest(url(locale()));
         });
 
         Menu::macro('language', function () {
-            return locales()->reduce(function (Menu $menu, string $locale) {
+            return Menu::new()->fill(locales(), function (Menu $menu, string $locale) {
                 $menu->url($locale, $locale);
-            }, Menu::front());
+            })->setActiveFromRequest(url('/'));
         });
 
         Menu::macro('articleSiblings', function (Article $article) {
-            return app(ArticleRepository::class)->getSiblings($article)
-                ->reduce(function (Menu $menu, Article $article) {
-                    return $menu->url($article->fullUrl, $article->name);
-                }, Menu::front());
+
+            $articles = app(ArticleRepository::class)->getSiblings($article);
+
+            return Menu::new()->fill($articles, function (Menu $menu, Article $article) {
+                return $menu->url($article->fullUrl, $article->name);
+            })->setActiveFromRequest(url(locale()));
         });
     }
 }

@@ -14,5 +14,6 @@
 @endsection
 
 @section('mainContent')
+    {{ Menu::articleSiblings(App\Models\Article::find(4)) }}
     {!! $article->text !!}
 @endsection
